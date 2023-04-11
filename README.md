@@ -1,7 +1,7 @@
 # MAVEn
 MAVEn (Model-based Analysis of Volume Ensembles) is used for the systematic analysis of compositionally-heterogeneous cryo-EM datasets. This code is designed to work downstream of [cryoDRGN](https://github.com/zhonge/cryodrgn), after users have generated a large number of maps (usually 500-1000) systematically sampling the latent space, but can be applied to any ensemble of volumes. 
  
-The software formerly known as subunit occupancy analysis (in the 2023 Nature Protocols publication) is now known as MAVEn, and incorporates several new features, including voxel PCA and on-the-fly occupancy querying of all particles in a cryoDRGN training run. All future versions will be updated in the MAVEn repository rather than the occupancy-analysis repository. 
+The software formerly known as subunit occupancy analysis (in the 2023 Nature Protocols publication) is now known as MAVEn, and incorporates several new features, including voxel PCA and on-the-fly occupancy querying of all particles in a cryoDRGN training run. All future versions will be updated in the MAVEn repository rather than the [occupancy-analysis repository](https://github.com/lkinman/occupancy-analysis. 
   
 ## Literature
 Davis, J.H., Tan, Y.Z., Carragher, B., Potter, C.S., Lyumkis, D., and Williamson, J.R. (2016). Modular assembly of the bacterial large ribosomal subunit. Cell *167*, 1610–1622. doi: [10.1016/j.cell.2016.11.020](https://doi.org/10.1016/j.cell.2016.11.020)  
