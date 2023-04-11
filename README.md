@@ -4,9 +4,9 @@ MAVEn (Model-based Analysis of Volume Ensembles) is used for the systematic anal
 The software formerly known as subunit occupancy analysis (in the 2023 Nature Protocols publication) is now known as MAVEn, and incorporates several new features, including voxel PCA and on-the-fly occupancy querying of all particles in a cryoDRGN training run. All future versions will be updated in the MAVEn repository rather than the occupancy-analysis repository. 
   
 ## Literature
-Davis, J.H., Tan, Y.Z., Carragher, B., Potter, C.S., Lyumkis, D., and Williamson, J.R. (2016). Modular assembly of the bacterial large ribosomal subunit. Cell *167*, 1610–1622. doi: [10.1016/j.cell.2016.11.020](https://doi.org/10.1016/j.cell.2016.11.020)
-Davis, J.H., and Williamson, J.R. (2017). Structure and dynamics of bacterial ribosome biogenesis. Phil Trans R Soc B *372*, 1716. doi: [https:10.1098/rstb.2016.0181](https://doi.org/10.1098/rstb.2016.0181)
-Kinman, L.F., Powell, B.M., Zhong, E.D., Berger, B., and Davis, J.H. (2023). Uncovering structural ensembles from single-particle cryo-EM data using cryoDRGN. Nat Protoc *18*(2), 319-339. doi: [10.1038/s41596-022-00763-x](https://doi.org/10.1038/s41596-022-00763-x)
+Davis, J.H., Tan, Y.Z., Carragher, B., Potter, C.S., Lyumkis, D., and Williamson, J.R. (2016). Modular assembly of the bacterial large ribosomal subunit. Cell *167*, 1610–1622. doi: [10.1016/j.cell.2016.11.020](https://doi.org/10.1016/j.cell.2016.11.020)  
+Davis, J.H., and Williamson, J.R. (2017). Structure and dynamics of bacterial ribosome biogenesis. Phil Trans R Soc B *372*, 1716. doi: [https:10.1098/rstb.2016.0181](https://doi.org/10.1098/rstb.2016.0181)  
+Kinman, L.F., Powell, B.M., Zhong, E.D., Berger, B., and Davis, J.H. (2023). Uncovering structural ensembles from single-particle cryo-EM data using cryoDRGN. Nat Protoc *18*(2), 319-339. doi: [10.1038/s41596-022-00763-x](https://doi.org/10.1038/s41596-022-00763-x)  
 
    
 ## Installing  
