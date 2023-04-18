@@ -71,7 +71,7 @@ def main(args):
                 
         if i%10 == 0 and i != 0:
             dt = time.time() - t_start
-            est_time = dt/i*(500-i)
+            est_time = dt/i*(total_vols-i)
             print('working on map ' + str(i) + '/' + str(total_vols))
             print('estimated time remaining: ' + str(est_time) + 's')
             
