@@ -12,15 +12,16 @@ from cryodrgn import utils
 ### Define relevant variables
 results_dir = '../' #change as necessary
 output_dir = './' #change as necessary
-subunit1 = 'H44' #change as necessary
-subunit2 = 'head' #change as necessary
-mask_names = {subunit1: '/path/to/subunit1/mask.mrc', subunit2: '/path/to/subunit2/mask.mrc'}
-Apix = 5.07 #pixel size in the final downsampled volumes
+subunits = ['subunit1', 'subunit2'] #change as necessary
+mask_names = {'subunit1': '/path/to/subunit1_mask.mrc', 'subunit2': '/path/to/subunit2_mask.mrc'}
+Apix = 1 #pixel size in the final downsampled volumes
 flip = False #whether or not to flip the handedness of the generated volumes
-df_path = '/path/to/cryodrgn_viz_notebook/generated/dataframe.csv'
+df_path = 'kmeans500_df.csv' #dataframe written out by cryodrgn_viz.ipynb, where each particle is a row
 cuda = 0 #change cuda device for volume generation if desired
-bin_thr = 1 #set to None if you don't want to binarize
+bin_thr = None #set to None if you don't want to binarize, otherwise provide a threshold for binarization
 downsample = 64 #boxsize at which to generate volumes; boxsize 64 is recommended
+epoch = 29
+tmp_vol_dir = './tmp' #temporary folder where volumes will be generated
 ###
 
 def generate_volumes(zvalues, outdir, **kwargs):
@@ -35,7 +36,7 @@ def generate_volumes(zvalues, outdir, **kwargs):
 t0 = time.time()
 
 #read in indices and masks
-with open(f'{results_dir}z.29.pkl','rb') as f:
+with open(f'{results_dir}z.{epoch}.pkl','rb') as f:
     z = pickle.load(f)
 df = pd.read_csv(df_path, index_col = 0)
 all_inds = df.index
@@ -43,11 +44,12 @@ batch_size = 1000
 mask_dict = {i: mrc.parse_mrc(mask_names[i])[0].flatten() for i in mask_names}
 
 #define volume generation choices
-tmp_vol_dir = './tmp'
+if not os.path.exists(tmp_vol_dir):
+    os.mkdir(tmp_vol_dir)
+
 
 #initialize occupancy arrays
-sub1_occupancies = np.array([])
-sub2_occupancies = np.array([])
+subunit_occupancies = {i: np.array([]) for i in mask_names}
 
 #iterate through all particles in batches
 for i in range(math.ceil(len(all_inds)/batch_size)):
@@ -58,18 +60,16 @@ for i in range(math.ceil(len(all_inds)/batch_size)):
     
     #read in and measure volumes
     vol_list = np.sort(glob.glob(tmp_vol_dir + '/*.mrc'))
-    vol_array_sub1 = np.zeros((batch_size, len(mask_dict[subunit1])))
-    vol_array_sub2 = np.zeros((batch_size, len(mask_dict[subunit2])))
-    for i, vol in enumerate(vol_list):
-        if bin_thr:
-            data = np.where(mrc.parse_mrc(vol)[0].flatten() > bin_thr, 1, 0)
-        else:
-            data = mrc.parse_mrc(vol)[0].flatten()
-        vol_array_sub1[i] = data*mask_dict[subunit1]
-        vol_array_sub2[i] = data*mask_dict[subunit2]
-        
-    sub1_occupancies = np.concatenate((sub1_occupancies, vol_array_sub1.sum(axis = 1)))
-    sub2_occupancies = np.concatenate((sub2_occupancies, vol_array_sub2.sum(axis = 1)))
+    vol_arrays = {j: np.zeros((batch_size, len(mask_dict[j]))) for  j in mask_dict}
+    for k, vol in enumerate(vol_list):
+        data = mrc.parse_mrc(vol)[0].flatten()
+        if bin_thr is not None:
+            data = np.where(data > bin_thr, 1, 0)
+        for j in mask_dict:
+            vol_arrays[j][k] = data*mask_dict[j]
+    
+    for j in subunit_occupancies:
+        subunit_occupancies[j] = np.concatenate((subunit_occupancies[j], vol_arrays[j].sum(axis = 1)))
     
     #delete volumes
     for file in vol_list:
@@ -81,5 +81,5 @@ for i in range(math.ceil(len(all_inds)/batch_size)):
     est_time = dt/((i+1)*batch_size)*(len(all_inds)-(i+1)*batch_size)
     print(f'{dt/60} min elapsed; estimated time remaining = {est_time/60} min')
     
-utils.save_pkl(sub1_occupancies, f'{output_dir}otf_{subunit1}_occupancies.pkl')
-utils.save_pkl(sub2_occupancies, f'{output_dir}otf_{subunit2}_occupancies.pkl')
+for j in subunit_occupancies:
+    utils.save_pkl(subunit_occupancies[j], f'{output_dir}otf_{j}_occupancies.pkl')
