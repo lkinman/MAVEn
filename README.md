@@ -8,8 +8,11 @@ Davis, J.H., Tan, Y.Z., Carragher, B., Potter, C.S., Lyumkis, D., and Williamson
   
 Davis, J.H., and Williamson, J.R. (2017). Structure and dynamics of bacterial ribosome biogenesis. Phil Trans R Soc B *372*, 1716. doi: [https:10.1098/rstb.2016.0181](https://doi.org/10.1098/rstb.2016.0181)  
   
-Kinman, L.F., Powell, B.M., Zhong, E.D., Berger, B., and Davis, J.H. (2023). Uncovering structural ensembles from single-particle cryo-EM data using cryoDRGN. Nat Protoc *18*(2), 319-339. doi: [10.1038/s41596-022-00763-x](https://doi.org/10.1038/s41596-022-00763-x)  
+Kinman, L.F., Powell, B.M., Zhong, E.D., Berger, B., and Davis, J.H. (2023). Uncovering structural ensembles from single-particle cryo-EM data using cryoDRGN. Nat Protoc *18*(2), 319-339. doi: [10.1038/s41596-022-00763-x](https://doi.org/10.1038/s41596-022-00763-x) 
 
+Sun, J., Kinman, L.F., Jahagirdar, D., Ortega, J., Davis, J.H. (2023). KsgA facilitates ribosomal small subunit maturation by proofreading a key structural lesion. Nat Struct Mol Biol *30*(10), 1468-1480. doi: [10.1038/s41594-023-01078-5](https://doi.org/10.1038/s41594-023-01078-5).
+
+Ghanbarpour, A., Cohen, S.E., Fei, X., Kinman, L.F., Bell, T.A., Zhang, J., Baker, T.A., Davis, J.H., Sauer, R.T. (2023). A closed translocation channel in the substrate-free AAA+ ClpXP protease diminishes rogue degradation. Nat Commun *14*. 
    
 ## Installing  
 If you have an existing cryoDRGN conda environment, that environment can be directly used for all MAVEn scripts. The scripts require a cryoDRGN installation, so if you do not have cryoDRGN installed, instructions can be found [here](https://github.com/zhonge/cryodrgn). Note that this software is currently compatible with cryoDRGN v0.3.2. 
