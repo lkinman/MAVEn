@@ -9,10 +9,12 @@ import time
 import string
 
 def add_args(parser):
-    parser.add_argument('--mapdir', type = str, required=True, help = 'Directory where sampled volumes are stored')
-    parser.add_argument('--maskdir', type = str, required=True, help = 'Directory where subunit masks are stored')
+    parser.add_argument('--mapdir', type = str, required = True, help = 'Directory where sampled volumes are stored')
+    parser.add_argument('--maskdir', type = str, required = True, help = 'Directory where subunit masks are stored')
     parser.add_argument('--refdir', type = str, default = None, help = 'Directory where reference maps from the atomic model are stored')
     parser.add_argument('--outdir', default = './', help = 'Directory in which to store output data')
+    parser.add_argument('--bin', default = None, type=float, required = False, help = 'Optional binarization threshold to apply to all particles')
+    parser.add_argument('--binfile', default = None, type=str, required = False, help = 'Optional file containing per-map binarization thresholds')
     return parser
 
 def check_dirname(dirname):
@@ -39,6 +41,14 @@ def main(args):
     else:
         refdir = None
     outdir = check_dirname(args.outdir)
+
+    if args.bin:
+        assert args.binfile is None, '--bin and --binfile cannot both be provided'
+        assert args.refdir is None, 'reference normalization is not compatible with binarization'
+    if args.binfile:
+        assert args.bin is None, '--bin and --binfile cannot both be provided'
+        assert args.refdir is None, 'reference normalization is not compatible with binarization'
+        bin_df = pd.read_csv(args.binfile, index_col = 'vol_id')
     
     total_vols = len([i for i in os.listdir(mapdir) if i.endswith('.mrc')])
     
@@ -62,6 +72,11 @@ def main(args):
             data = mrc.parse_mrc(mapdir + mapfile)[0].flatten()
             map_num = int(parse_name(mapfile, vol_type = 'map')[-1])
             
+            if args.bin:
+                data = np.where(data >= args.bin, 1, 0)
+            elif args.binfile:
+                data = np.where(data >= bin_df.loc[map_num, 'denormalized_predictions'], 1, 0)
+
             for mask in mask_dict.keys():
                 cut = mask_dict[mask]*data
                 sum_val = cut.sum()
