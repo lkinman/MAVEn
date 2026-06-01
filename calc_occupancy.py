@@ -1,9 +1,7 @@
 import argparse
 import pandas as pd
 import numpy as np
-from cryodrgn import mrc
-from cryodrgn import analysis
-from cryodrgn import utils
+import mrcfile
 import os
 import time
 import string
@@ -32,6 +30,15 @@ def parse_name(filename, vol_type):
         parsed = filename.split('.mrc')[0].split('_')
         
     return parsed
+
+def read_mrc(filename):
+    with mrcfile.open(filename, 'r', permissive = True) as f:
+        vol_data = f.data.copy()
+        vol_data = vol_data.flatten()
+
+    return vol_data
+
+
 
 def main(args):
     mapdir = check_dirname(args.mapdir)
@@ -64,12 +71,12 @@ def main(args):
     mask_dict = {}
     for maskfile in os.listdir(maskdir):
         pdb_name, chain = parse_name(maskfile, vol_type = 'mask')
-        mask_dict['__'.join([pdb_name, chain])] = mrc.parse_mrc(maskdir + maskfile)[0].flatten()
+        mask_dict['__'.join([pdb_name, chain])] = read_mrc(maskdir + maskfile)
     
     t_start = time.time()
     for i,mapfile in enumerate(os.listdir(mapdir)):
         if mapfile.endswith('.mrc'):
-            data = mrc.parse_mrc(mapdir + mapfile)[0].flatten()
+            data = read_mrc(mapdir + mapfile)
             map_num = int(parse_name(mapfile, vol_type = 'map')[-1])
             
             if args.bin:
@@ -93,7 +100,7 @@ def main(args):
     if refdir:
         print('normalizing to reference maps')
         for reffile in os.listdir(refdir):
-            ref = mrc.parse_mrc(refdir + reffile)[0].flatten()
+            ref = read_mrc(refdir + reffile)
             pdb_name, chain = parse_name(reffile, vol_type = 'ref')
             ref_val = ref.sum()
         
